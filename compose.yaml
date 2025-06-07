@@ -1,0 +1,59 @@
+services:
+  mongodb:
+    image: mongo:7.0
+    container_name: my_sms_mongodb_dev
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: password123
+      MONGO_INITDB_DATABASE: my_sms_dev
+    volumes:
+      - mongodb_dev_data:/data/db
+    networks:
+      - app-network
+
+  backend:
+    build: 
+      context: ./my_sms_be
+      dockerfile: Dockerfile
+    container_name: my_sms_be_dev
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      - RAILS_ENV=production
+      - MONGODB_URI=mongodb://admin:password123@mongodb:27017/my_sms_dev?authSource=admin
+      - SECRET_KEY_BASE=your_secret_key_here
+    depends_on:
+      - mongodb
+    volumes:
+      - ./my_sms_be:/rails
+      - /rails/tmp
+      - /rails/log
+    networks:
+      - app-network
+    command: bin/rails server -b 0.0.0.0 -p 3000
+  frontend:
+    build:
+      context: ./my_sms_fe
+      dockerfile: Dockerfile
+    container_name: my_sms_fe_dev
+    restart: unless-stopped
+    ports:
+      - "4200:4200"
+    depends_on:
+      - backend
+    volumes:
+      - ./my_sms_fe:/app
+      - /app/node_modules
+    networks:
+      - app-network
+    command: ng serve --host 0.0.0.0 --port 4200
+
+volumes:
+  mongodb_dev_data:
+
+networks:
+  app-network:
+    driver: bridge

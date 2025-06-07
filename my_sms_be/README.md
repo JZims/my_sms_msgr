@@ -21,4 +21,8 @@ Things you may want to cover:
 
 * Deployment instructions
 
-* ...
+* MongoDB is used for data storage via the mongoid gem.
+* The database name for development is `my_sms_dev`.
+* The backend service expects a `MONGODB_URI` environment variable (see docker-compose.yml).
+* The mongoid configuration is in `config/mongoid.yml`.
+* The Dockerfile ensures this config is present in the container.
