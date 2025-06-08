@@ -14,20 +14,76 @@ RSpec.describe "Messages API", type: :request do
       }
     end
 
-    it "stores message with session_id in MongoDB" do
-      expect {
-        post "/messages", params: valid_params
-      }.to change(Message, :count).by(1)
+    before do
+      # Mock Twilio credentials
+      allow(Rails.application.credentials).to receive(:twilio_account_sid).and_return("test_account_sid")
+      allow(Rails.application.credentials).to receive(:twilio_auth_token).and_return("test_auth_token")
+      allow(Rails.application.credentials).to receive(:twilio_phone_number).and_return("+1234567890")
+    end
 
-      expect(response).to have_http_status(:created)
-      
-      message = Message.last
-      expect(message.session_id).to eq(session_id)
-      expect(message.phone_number).to eq("+1234567890")
-      expect(message.message_body).to eq("Hello from session test!")
-      expect(message.direction).to eq("outbound")
-      expect(message.status).to eq("stored")
-      expect(message.created_at).to be_present
+    context "when Twilio API succeeds" do
+      before do
+        # Mock successful Twilio API response
+        stub_request(:post, "https://api.twilio.com/2010-04-01/Accounts/test_account_sid/Messages.json")
+          .to_return(
+            status: 201,
+            body: {
+              sid: "SM123456789",
+              status: "queued",
+              to: "+1234567890",
+              from: "+1234567890",
+              body: "Hello from Twilio test!"
+            }.to_json,
+            headers: { 'Content-Type' => 'application/json' }
+          )
+      end
+
+      it "stores message with session_id in MongoDB" do
+        expect {
+          post "/messages", params: valid_params
+        }.to change(Message, :count).by(1)
+
+        expect(response).to have_http_status(:created)
+        
+        message = Message.last
+        expect(message.session_id).to eq(session_id)
+        expect(message.phone_number).to eq("+1234567890")
+        expect(message.status).to eq("sent")
+        expect(message.twilio_sid).to eq("SM123456789")
+      end
+    end
+
+    context "when Twilio API fails" do
+      before do
+        # Mock failed Twilio API response
+        stub_request(:post, "https://api.twilio.com/2010-04-01/Accounts/test_account_sid/Messages.json")
+          .to_return(
+            status: 400,
+            body: {
+              code: 21211,
+              message: "The 'To' number +1234567890 is not a valid phone number.",
+              more_info: "https://www.twilio.com/docs/errors/21211"
+            }.to_json,
+            headers: { 'Content-Type' => 'application/json' }
+          )
+      end
+
+      it "stores message with failed status" do
+        expect {
+          post "/messages", params: valid_params
+        }.to change(Message, :count).by(1)
+
+        expect(response).to have_http_status(:unprocessable_entity)
+        
+        message = Message.last
+        expect(message.session_id).to eq(session_id)
+        expect(message.phone_number).to eq("+1234567890")
+        expect(message.status).to eq("failed")
+        expect(message.twilio_sid).to be_nil
+        
+        response_body = JSON.parse(response.body)
+        expect(response_body["errors"]).to include("SMS failed:")
+      end
     end
 
     it "returns validation errors for missing session_id" do
