@@ -14,6 +14,18 @@ Things you may want to cover:
 
 * How to run the test suite
 
+## Test Commands
+```bash
+# Start MongoDB
+docker compose up -d mongodb
+
+# Run all tests
+bundle exec rspec
+
+# Run specific test file
+bundle exec rspec spec/requests/messages_spec.rb
+```
+
 * Services (job queues, cache servers, search engines, etc.)
 
 * Deployment instructions
