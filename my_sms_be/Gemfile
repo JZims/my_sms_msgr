@@ -35,3 +35,4 @@ group :development, :test do
 end
 gem "mongoid"
 gem "rack-cors"
+gem "twilio-ruby"
