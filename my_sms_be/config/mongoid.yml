@@ -2,7 +2,7 @@
 development:
   clients:
     default:
-      uri: <%= ENV['MONGODB_URI'] || 'mongodb://admin:password123@mongodb:27017/my_sms_dev?authSource=admin' %>
+      uri: <%= ENV['MONGODB_URI'] || 'mongodb://admin:password123@localhost:27017/my_sms_dev?authSource=admin' %>
       options:
         server_selection_timeout: 5
   options:
@@ -22,7 +22,7 @@ production:
 test:
   clients:
     default:
-      uri: <%= ENV['MONGODB_URI'] || 'mongodb://admin:password123@mongodb:27017/my_sms_test?authSource=admin' %>
+      uri: <%= ENV['MONGODB_URI'] || 'mongodb://admin:password123@localhost:27017/my_sms_test?authSource=admin' %>
       options:
         server_selection_timeout: 5
   options:

@@ -2,9 +2,10 @@
 
 FactoryBot.define do
     factory :message do
-        phone_number {"+1234567890"}
+        session_id { "test-session-#{rand(1000)}" }
+        phone_number { "+1234567890" }
         message_body { "Test message" }
         direction { "outbound" }
-        status { "sending" }
-  end
+        status { "stored" }
+    end
 end
