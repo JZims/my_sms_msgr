@@ -6,7 +6,7 @@ development:
       options:
         server_selection_timeout: 5
   options:
-    use_activesupport_time_zone: true
+    # use_activesupport_time_zone: true
     use_utc: false
 
 production:
@@ -16,7 +16,7 @@ production:
       options:
         server_selection_timeout: 5
   options:
-    use_activesupport_time_zone: true
+    # use_activesupport_time_zone: true
     use_utc: true
 
 test:
@@ -26,5 +26,5 @@ test:
       options:
         server_selection_timeout: 5
   options:
-    use_activesupport_time_zone: true
+    # use_activesupport_time_zone: true
     use_utc: false
