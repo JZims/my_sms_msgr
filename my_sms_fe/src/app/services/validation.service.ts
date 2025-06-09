@@ -12,12 +12,24 @@ export class ValidationService {
       return 'Phone number is required';
     }
 
+    // Remove spaces, dashes, parentheses for validation
+    const cleanPhone = phone.replace(/[\s\-\(\)]/g, '');
     
-    // Optional +, starts with 1-9, followed by 1-14 digits
-    const backendPattern = /^\+?[1-9]\d{1,14}$/;
-    
-    if (!backendPattern.test(phone)) {
-      return 'Must be a valid phone number (e.g., +1234567890 or 1234567890)';
+    // Check for basic format: optional +, then digits
+    const basicPattern = /^\+?[1-9]\d{1,14}$/;
+    if (!basicPattern.test(cleanPhone)) {
+      return 'Must be a valid phone number (e.g., +15551234567)';
+    }
+
+    // Warn about common test numbers that Twilio will reject
+    const testNumbers = ['+1234567890', '1234567890', '+15551234567'];
+    if (testNumbers.includes(cleanPhone)) {
+      return 'Please use a real phone number. Test numbers like 123-456-7890 are not supported.';
+    }
+
+    // Check for obviously fake patterns
+    if (/^(\+?1?)(123|555|000|111|222|333|444|666|777|888|999)\d{7}$/.test(cleanPhone)) {
+      return 'Please enter a valid phone number. Common test patterns are not supported.';
     }
 
     return null; 

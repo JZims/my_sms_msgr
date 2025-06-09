@@ -87,23 +87,34 @@ class MessagesController < ApplicationController
             twilio_message = client.messages.create(
                 from: TwilioConfig.phone_number,
                 to: message.phone_number,
-                body: message.message_body,
-                status_callback: status_callback_url
-            )
+                body: message.message_body
+            }
+            
+            # Only add StatusCallback in production (localhost URLs don't work for webhooks)
+            unless Rails.env.development?
+                message_params[:status_callback] = "#{request.base_url}/webhooks/twilio/status"
+            end
+            
+            twilio_message = client.messages.create(**message_params)
 
             # Update message with Twilio response details
             twilio_status = map_twilio_status(twilio_message.status)
-            message.update(status: twilio_status, twilio_sid: twilio_message.sid)
+            update_result = message.update(status: twilio_status, twilio_sid: twilio_message.sid)
             
-            Rails.logger.info "SMS sent to #{message.phone_number} with SID: #{twilio_message.sid}, Status: #{twilio_message.status}"
+            if update_result
+                Rails.logger.info "SMS sent to #{message.phone_number} with SID: #{twilio_message.sid}, Status: #{twilio_message.status}"
+            else
+                Rails.logger.error "Failed to update message #{message.id} with SID: #{twilio_message.sid}. Errors: #{message.errors.full_messages}"
+            end
+            
             true
         rescue Twilio::REST::RestError => e
             message.update(status: 'failed')
-            Rails.logger.error "Twilio API error: #{e.message} (Code: #{e.code})"
+            Rails.logger.error "Twilio API error: #{e.message} (Code: #{e.code}) for number: #{message.phone_number}"
             false
         rescue => e
             message.update(status: 'failed')
-            Rails.logger.error "SMS failed: #{e.message}"
+            Rails.logger.error "SMS failed: #{e.message} for number: #{message.phone_number}"
             false
         end
     end

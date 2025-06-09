@@ -25,6 +25,9 @@ services:
       - RAILS_ENV=development
       - MONGODB_URI=mongodb://admin:password123@mongodb:27017/my_sms_dev?authSource=admin
       - BUNDLE_PATH=/usr/local/bundle
+      - TWILIO_ACCOUNT_SID=${TWILIO_ACCOUNT_SID}
+      - TWILIO_AUTH_TOKEN=${TWILIO_AUTH_TOKEN}
+      - TWILIO_PHONE_NUMBER=${TWILIO_PHONE_NUMBER}
     depends_on:
       - mongodb
     volumes:

@@ -17,5 +17,5 @@ class Message
 
   scope :for_user, ->(user_name) { where(user_name: user_name) }
 
-  belongs_to :user, foreign_key: :user_name, primary_key: :user_name
+  belongs_to :user, foreign_key: :user_name, primary_key: :user_name, optional: true
 end

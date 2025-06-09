@@ -1,0 +1,22 @@
+# Simple production Dockerfile for Railway deployment
+FROM node:lts-alpine
+
+# Set working directory
+WORKDIR /app
+
+# Copy package files and install dependencies
+COPY package*.json ./
+RUN npm install
+
+# Copy source code
+COPY . .
+
+# Build for production
+RUN npm run build
+
+# Expose port
+EXPOSE 80
+
+# Serve using a simple HTTP server
+RUN npm install -g http-server
+CMD ["http-server", "dist/my_sms_fe/browser", "-p", "80", "--proxy", "http://localhost:80?"]

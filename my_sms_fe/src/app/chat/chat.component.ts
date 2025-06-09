@@ -120,6 +120,13 @@ export class ChatComponent implements OnInit, OnDestroy {
     return !this.phoneError && !this.messageError;
   }
 
+  // Getter for template use - doesn't trigger validation, just checks current state
+  get isFormValidForTemplate(): boolean {
+    return !this.phoneError && !this.messageError && 
+           this.phoneNumber.trim() !== '' && 
+           this.messageBody.trim() !== '';
+  }
+
   validatePhone(): void {
     this.phoneError = this.validationService.validatePhoneNumber(this.phoneNumber) || '';
   }
@@ -135,7 +142,7 @@ export class ChatComponent implements OnInit, OnDestroy {
 
   getCharacterCount(): string {
     const remaining = 250 - this.messageBody.length;
-    return `${this.messageBody.length}/250 characters`;
+    return `${this.messageBody.length}`;
   }
 
   isCharacterLimitExceeded(): boolean {
