@@ -24,13 +24,14 @@ services:
     environment:
       - RAILS_ENV=development
       - MONGODB_URI=mongodb://admin:password123@mongodb:27017/my_sms_dev?authSource=admin
+      - BUNDLE_PATH=/usr/local/bundle
     depends_on:
       - mongodb
     volumes:
       - ./my_sms_be:/rails
+      - bundle_cache:/usr/local/bundle
       - /rails/tmp
       - /rails/log
-      - bundle_cache:/usr/local/bundle
     networks:
       - app-network
 

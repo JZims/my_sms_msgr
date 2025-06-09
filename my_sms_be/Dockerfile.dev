@@ -15,12 +15,9 @@ WORKDIR /rails
 # Install bundler
 RUN gem install bundler
 
-# Copy Gemfile and install gems
+# Copy Gemfile and install gems first
 COPY Gemfile Gemfile.lock ./
 RUN bundle install
-
-# Copy the rest of the application
-COPY . .
 
 # Create necessary directories
 RUN mkdir -p tmp/pids
@@ -28,5 +25,5 @@ RUN mkdir -p tmp/pids
 # Expose port
 EXPOSE 3000
 
-# Start the server
-CMD ["bin/rails", "server", "-b", "0.0.0.0", "-p", "3000"]
+# Install gems at runtime and start the server
+ENTRYPOINT ["sh", "-c", "bundle install && exec rails server -b 0.0.0.0"]
