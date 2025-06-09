@@ -11,7 +11,6 @@ A modern, real-time SMS messaging application built with Rails API backend and A
 
 - **Real-time SMS messaging** via Twilio integration
 - **Dynamic read receipts** with automatic status updates
-- **Clean, minimalist UI** without manual refresh buttons or emoji clutter
 - **Webhook-based status updates** for real-time message delivery tracking
 - **User authentication** with JWT tokens
 - **MongoDB database** for scalable message storage
