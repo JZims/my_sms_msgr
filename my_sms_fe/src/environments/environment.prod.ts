@@ -1,4 +1,4 @@
 export const environment = {
   production: true,
-  apiUrl: 'https://your-production-backend-url.com' // Replace with your actual production backend URL
+  apiUrl: 'https://my-sms-backend.onrender.com' // Update this with your actual Render backend URL after deployment
 };
