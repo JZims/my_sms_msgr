@@ -8,7 +8,8 @@ A Rails 8 API backend for SMS messaging using Twilio, MongoDB, and session-based
 ✅ **MongoDB Storage** - Store messages with session support using Mongoid  
 ✅ **Session-based Chat** - Filter messages by session ID for isolated conversations  
 ✅ **Comprehensive Testing** - RSpec test suite with WebMock for API mocking  
-✅ **Synchronous Flow** - Wait for Twilio response before storing final message status  
+✅ **Error Handling** - Proper exception handling and validation  
+✅ **CORS Support** - Configured for frontend integration  
 
 ## API Endpoints
 
@@ -27,6 +28,8 @@ A Rails 8 API backend for SMS messaging using Twilio, MongoDB, and session-based
 ```bash
 GET /messages?session_id=chat-session-123
 ```
+
+**GET /up** - Health check endpoint
 
 ## SMS Workflow
 
@@ -55,6 +58,14 @@ twilio_phone_number: +1234567890
 - Connection: `mongodb://localhost:27017` 
 - Configuration: `config/mongoid.yml`
 
+## Development Setup
+
+1. Install dependencies: `bundle install`
+2. Start MongoDB: `docker compose up -d mongodb`  
+3. Set up credentials: `bin/rails credentials:edit`
+4. Run tests: `bundle exec rspec`
+5. Start server: `bin/rails server`
+
 ## Testing
 
 ```bash
@@ -64,21 +75,13 @@ docker compose up -d mongodb
 # Run all tests  
 bundle exec rspec
 
-# Run specific test file
-bundle exec rspec spec/requests/messages_spec.rb
+# Run with documentation format
+bundle exec rspec --format documentation --backtrace --verbose
 ```
 
 **Test Coverage:**
 - Session-based message filtering
 - Twilio API success scenarios (mocked)
 - Twilio API failure scenarios (mocked) 
-- Message validation
+- Message validation and error handling
 - MongoDB integration
-
-## Development Setup
-
-1. Install dependencies: `bundle install`
-2. Start MongoDB: `docker compose up -d mongodb`  
-3. Set up credentials: `bin/rails credentials:edit`
-4. Run tests: `bundle exec rspec`
-5. Start server: `bin/rails server`

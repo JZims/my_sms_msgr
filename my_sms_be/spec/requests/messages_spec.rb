@@ -93,7 +93,7 @@ RSpec.describe "Messages API", type: :request do
       post "/messages", params: invalid_params
       
       expect(response).to have_http_status(:unprocessable_entity)
-      expect(JSON.parse(response.body)["errors"]).to include("session_id")
+      expect(JSON.parse(response.body)["errors"]).to include("Session can't be blank")
     end
   end
 
