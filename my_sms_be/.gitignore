@@ -32,3 +32,18 @@
 /config/master.key
 
 /config/credentials/development.key
+
+# Ignore compiled assets and cache
+/tmp/cache/
+/public/assets/
+
+# Ignore local development files
+*.local
+local_secret.txt
+
+# Ignore OS files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
