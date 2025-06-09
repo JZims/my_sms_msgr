@@ -1,0 +1,59 @@
+# Production-like Docker Compose for local testing
+version: '3.8'
+
+services:
+  mongodb:
+    image: mongo:7.0
+    container_name: my_sms_mongodb_prod
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: password123
+      MONGO_INITDB_DATABASE: my_sms_prod
+    volumes:
+      - mongodb_prod_data:/data/db
+    networks:
+      - app-network
+
+  backend:
+    build: 
+      context: ./my_sms_be
+      dockerfile: Dockerfile.railway
+    container_name: my_sms_be_prod
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      - RAILS_ENV=production
+      - RAILS_SERVE_STATIC_FILES=true
+      - RAILS_LOG_TO_STDOUT=true
+      - MONGODB_URI=mongodb://admin:password123@mongodb:27017/my_sms_prod?authSource=admin
+      - TWILIO_ACCOUNT_SID=${TWILIO_ACCOUNT_SID}
+      - TWILIO_AUTH_TOKEN=${TWILIO_AUTH_TOKEN}
+      - TWILIO_PHONE_NUMBER=${TWILIO_PHONE_NUMBER}
+      - RAILS_MASTER_KEY=${RAILS_MASTER_KEY}
+    depends_on:
+      - mongodb
+    networks:
+      - app-network
+
+  frontend:
+    build:
+      context: ./my_sms_fe
+      dockerfile: Dockerfile.railway
+    container_name: my_sms_fe_prod
+    restart: unless-stopped
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+    networks:
+      - app-network
+
+volumes:
+  mongodb_prod_data:
+
+networks:
+  app-network:
+    driver: bridge

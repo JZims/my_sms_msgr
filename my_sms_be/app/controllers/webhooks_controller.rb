@@ -16,13 +16,6 @@ class WebhooksController < ApplicationController
         if old_status != new_status
           message.update(status: new_status)
           Rails.logger.info "Updated message #{message_sid} status from #{old_status} to #{new_status}"
-          
-          # Here we could broadcast the update via WebSocket or Action Cable
-          # ActionCable.server.broadcast("user_#{message.user_name}", {
-          #   type: 'message_status_update',
-          #   message_id: message.id.to_s,
-          #   status: new_status
-          # })
         end
         
         render json: { status: 'success' }, status: :ok

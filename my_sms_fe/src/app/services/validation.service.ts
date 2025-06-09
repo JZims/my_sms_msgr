@@ -12,7 +12,7 @@ export class ValidationService {
       return 'Phone number is required';
     }
 
-    // Match the backend Rails validation: /\A\+?[1-9]\d{1,14}\z/
+    
     // Optional +, starts with 1-9, followed by 1-14 digits
     const backendPattern = /^\+?[1-9]\d{1,14}$/;
     
@@ -20,7 +20,7 @@ export class ValidationService {
       return 'Must be a valid phone number (e.g., +1234567890 or 1234567890)';
     }
 
-    return null; // Valid
+    return null; 
   }
 
   validateMessage(message: string, maxLength: number = 250): string | null {
@@ -34,7 +34,7 @@ export class ValidationService {
       return `Message must be ${maxLength} characters or less`;
     }
 
-    return null; // Valid
+    return null; 
   }
 
   formatPhoneNumber(phoneNumber: string): string {

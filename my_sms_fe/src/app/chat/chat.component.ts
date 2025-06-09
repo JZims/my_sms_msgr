@@ -3,7 +3,6 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { MessageService } from '../services/message.service';
 import { ValidationService } from '../services/validation.service';
-import { interval, Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-chat',

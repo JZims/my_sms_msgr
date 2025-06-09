@@ -15,7 +15,3 @@ export interface SendMessageRequest {
   phone_number: string;
   message_body: string;
 }
-
-export interface ApiErrorResponse {
-  errors: string[] | { [key: string]: string[] };
-}
