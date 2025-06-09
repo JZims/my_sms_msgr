@@ -19,6 +19,7 @@ logs/
 .Trashes
 ehthumbs.db
 Thumbs.db
+
 # IDE
 .vscode/
 .idea/
@@ -27,3 +28,9 @@ Thumbs.db
 
 # Documentation builds
 docs/_build/
+
+# Deployment guides and scripts (unnecessary)
+test-deployment.sh
+setup-railway-env.sh
+deploy.sh
+RAILWAY_DEPLOYMENT_NEXT_STEPS.md
