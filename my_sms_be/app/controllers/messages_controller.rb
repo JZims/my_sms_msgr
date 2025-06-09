@@ -34,10 +34,11 @@ class MessagesController < ApplicationController
     recent_messages.each do |message|
       if message.twilio_sid.present?
         begin
-          client = Twilio::REST::Client.new(
-            Rails.application.credentials.twilio_account_sid,
-            Rails.application.credentials.twilio_auth_token
-          )
+          # Check environment variables first, then fall back to credentials
+          account_sid = ENV['TWILIO_ACCOUNT_SID'] || Rails.application.credentials.twilio_account_sid
+          auth_token = ENV['TWILIO_AUTH_TOKEN'] || Rails.application.credentials.twilio_auth_token
+          
+          client = Twilio::REST::Client.new(account_sid, auth_token)
           
           twilio_message = client.messages(message.twilio_sid).fetch
           new_status = map_twilio_status(twilio_message.status)
@@ -69,17 +70,19 @@ class MessagesController < ApplicationController
 
     def send_sms(message)
         # Use real Twilio integration for all environments
-        client = Twilio::REST::Client.new(
-            Rails.application.credentials.twilio_account_sid,
-            Rails.application.credentials.twilio_auth_token
-        )
+        # Check environment variables first, then fall back to credentials
+        account_sid = ENV['TWILIO_ACCOUNT_SID'] || Rails.application.credentials.twilio_account_sid
+        auth_token = ENV['TWILIO_AUTH_TOKEN'] || Rails.application.credentials.twilio_auth_token
+        phone_number = ENV['TWILIO_PHONE_NUMBER'] || Rails.application.credentials.twilio_phone_number
+        
+        client = Twilio::REST::Client.new(account_sid, auth_token)
 
         begin
             # Set up status callback URL for webhook updates
             status_callback_url = "#{request.base_url}/webhooks/twilio/status"
             
             twilio_message = client.messages.create(
-                from: Rails.application.credentials.twilio_phone_number,
+                from: phone_number,
                 to: message.phone_number,
                 body: message.message_body,
                 status_callback: status_callback_url

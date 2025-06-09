@@ -4,7 +4,7 @@ version: 1
 services:
   backend:
     source: ./my_sms_be
-    dockerfile: Dockerfile.railway
+    dockerfile: Dockerfile
     variables:
       RAILS_ENV: production
       RAILS_SERVE_STATIC_FILES: true
@@ -17,7 +17,7 @@ services:
 
   frontend:
     source: ./my_sms_fe
-    dockerfile: Dockerfile.railway
+    dockerfile: Dockerfile
     variables:
       NODE_ENV: production
     healthcheck:

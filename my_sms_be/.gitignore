@@ -47,3 +47,5 @@ local_secret.txt
 ._*
 .Spotlight-V100
 .Trashes
+
+/config/credentials/production.key

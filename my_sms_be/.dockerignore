@@ -10,8 +10,7 @@
 # Ignore all environment files.
 /.env*
 
-# Ignore all default key files.
-/config/master.key
+# Ignore credentials key files (using environment variables instead).
 /config/credentials/*.key
 
 # Ignore all logfiles and tempfiles.
