@@ -53,28 +53,15 @@ Status updates happen automatically via:
 
 2. **Start with Docker**:
    ```bash
-   docker-compose up
+   docker compose up
    ```
 
 3. **Access the application**:
    - Frontend: http://localhost:4200
    - Backend API: http://localhost:3000
 
-### Production Deployment (Railway)
 
-1. **Automated deployment**:
-   ```bash
-   # Set environment variables
-   export MONGODB_URI="your_mongodb_atlas_uri"
-   export TWILIO_ACCOUNT_SID="your_sid"
-   export TWILIO_AUTH_TOKEN="your_token"
-   export TWILIO_PHONE_NUMBER="your_number"
-   
-   # Deploy
-   ./deploy.sh
-   ```
-
-2. **Manual deployment**: See [Railway Deployment Guide](docs/railway-deployment.md)
+ **Manual deployment**: See [Railway Deployment Guide](docs/railway-deployment.md)
 
 ## 📁 Project Structure
 
@@ -140,29 +127,6 @@ https://your-backend.railway.app/webhooks/twilio/status
 - `GET /health` - Health check endpoint
 - `GET /up` - Rails health check
 
-## 🎨 UI Features
-
-- **Clean Design**: Minimalist interface focused on messaging
-- **Color-coded Status**: Visual status indicators for message states
-- **Responsive Layout**: Works on desktop and mobile devices
-- **Real-time Updates**: No manual refresh needed
-- **Loading States**: Smooth UX during message sending
-
-## 🔄 Message Flow
-
-1. User types message and hits send
-2. Frontend sends request to Rails API
-3. Rails API sends SMS via Twilio with status callback URL
-4. Twilio delivers SMS and posts status updates to webhook
-5. Rails updates message status in database
-6. Frontend polls for status updates every 30 seconds
-7. UI automatically updates with latest status
-
-## 📚 Documentation
-
-- [Railway Deployment Guide](docs/railway-deployment.md) - Complete Railway deployment instructions
-- [API Documentation](docs/api-documentation.md) - API endpoint details
-- [Development Notes](docs/dev-notes.md) - Development setup and notes
 
 ## 🛠️ Development
 
@@ -194,14 +158,6 @@ docker-compose -f compose.prod.yaml up
 
 This project is open source and available under the [MIT License](LICENSE).
 
-## 🤝 Contributing
 
-1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Add tests if applicable
-5. Submit a pull request
-
----
 
 Built with ❤️ using Rails, Angular, and Twilio
