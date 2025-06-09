@@ -2,7 +2,7 @@
 version: 1
 
 services:
-  backend:
+  sms-backend:
     source: ./my_sms_be
     dockerfile: Dockerfile
     variables:
@@ -15,7 +15,7 @@ services:
       timeout: 10s
       retries: 3
 
-  frontend:
+  sms-frontend:
     source: ./my_sms_fe
     dockerfile: Dockerfile
     variables:
