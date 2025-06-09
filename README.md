@@ -4,17 +4,16 @@ A modern, real-time SMS messaging application built with Rails API backend and A
 
 ## 📺 Demo
 
-![SMS Messenger Demo](demo.gif)
-*Add your demo GIF here*
+![SMS Messenger Demo](my_sms_demo.gif)
+*Text Messages!*
 
 ## 🚀 Features
 
 - **Real-time SMS messaging** via Twilio integration
 - **Dynamic read receipts** with automatic status updates
-- **Webhook-based status updates** for real-time message delivery tracking
 - **User authentication** with JWT tokens
 - **MongoDB database** for scalable message storage
-- **Docker containerization** for consistent deployment
+- **Docker containerization** for consistent (eventual) deployment
 
 ## 📱 Message Status Flow
 
