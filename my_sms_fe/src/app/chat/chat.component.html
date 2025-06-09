@@ -1,38 +1,84 @@
-<h1>SMS Chat</h1>
+<div class="chat-container">
+  <header class="chat-header">
+    <h1>SMS Messenger</h1>
+  </header>
 
-<div class="messages">
-  <div *ngFor="let message of messages">
-    <p><strong>{{ message.phone_number }}</strong>: {{ message.message_body }} ({{ message.status }})</p>
-  </div>
-</div>
-
-<div class="form">
-  <div class="input-group">
-    <input 
-      type="text" 
-      [(ngModel)]="phoneNumber" 
-      (blur)="validatePhone()"
-      placeholder="Phone number (e.g., +1234567890)"
-      [class.error]="phoneError">
-    <div *ngIf="phoneError" class="error-text">{{ phoneError }}</div>
-  </div>
-  
-  <div class="input-group">
-    <textarea 
-      [(ngModel)]="messageBody"
-      (input)="validateMessage()"
-      placeholder="Type your message..."
-      maxlength="250"
-      [class.error]="messageError || isCharacterLimitExceeded()"></textarea>
-    <div class="char-count" [class.over-limit]="isCharacterLimitExceeded()">
-      {{ getCharacterCount() }}
+  <div class="messages-container">
+    <div class="messages-header">
+      <h3>Message History</h3>
+      <span class="message-count">{{ messages.length }} message{{ messages.length === 1 ? '' : 's' }}</span>
     </div>
-    <div *ngIf="messageError" class="error-text">{{ messageError }}</div>
+    
+    <div class="messages-list">
+      <div *ngIf="messages.length === 0" class="no-messages">
+        No messages yet. Send your first message below!
+      </div>
+      
+      <div *ngFor="let message of messages" class="message-item" [class]="'message-status-' + message.status">
+        <div class="message-header">
+          <div class="message-info">
+            <span class="phone-number">{{ message.phone_number }}</span>
+            <span class="message-timestamp">{{ formatTimestamp(message.created_at) }}</span>
+          </div>
+          <div class="status-container">
+            <span class="message-status-badge" [class]="'status-' + message.status">
+              <span class="status-text">{{ getStatusDisplayText(message.status) }}</span>
+            </span>
+          </div>
+        </div>
+        <div class="message-body">{{ message.message_body }}</div>
+      </div>
+    </div>
   </div>
-  
-  <button 
-    (click)="sendMessage()"
-    [disabled]="!isFormValid() || isCharacterLimitExceeded()">
-    Send
-  </button>
+
+  <div class="input-container">
+    <div class="input-header">
+      <h3>Send New Message</h3>
+    </div>
+    
+    <div class="input-form">
+      <div class="input-group">
+        <label for="phone">Phone Number</label>
+        <input 
+          id="phone"
+          type="text" 
+          [(ngModel)]="phoneNumber" 
+          (blur)="validatePhone()"
+          placeholder="Phone number (e.g., +1234567890)"
+          [class.error]="phoneError">
+        <div *ngIf="phoneError" class="error-text">{{ phoneError }}</div>
+      </div>
+      
+      <div class="input-group">
+        <label for="message">Message</label>
+        <textarea 
+          id="message"
+          [(ngModel)]="messageBody"
+          (input)="validateMessage()"
+          placeholder="Type your message..."
+          maxlength="250"
+          rows="3"
+          [class.error]="messageError || isCharacterLimitExceeded()"></textarea>
+        <div class="char-count" [class.over-limit]="isCharacterLimitExceeded()">
+          {{ getCharacterCount() }}/250
+        </div>
+        <div *ngIf="messageError" class="error-text">{{ messageError }}</div>
+      </div>
+      
+      <div class="button-group">
+         <button 
+          class="clear-button"
+          (click)="clearForm()"
+          type="button">
+          <span>Clear</span>
+        </button>
+        <button 
+          class="send-button"
+          (click)="sendMessage()"
+          [disabled]="!isFormValid() || isCharacterLimitExceeded()">
+          <span>Send Message</span>
+        </button>
+      </div>
+    </div>
+  </div>
 </div>
