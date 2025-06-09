@@ -12,23 +12,12 @@ export class ValidationService {
       return 'Phone number is required';
     }
 
-    // Check if it has invalid characters
-    if (!/^[\d\s\-\(\)\+]+$/.test(phone)) {
-      return 'Phone number can only contain digits, +, spaces, hyphens, and parentheses';
-    }
+    // Match the backend Rails validation: /\A\+?[1-9]\d{1,14}\z/
+    // Optional +, starts with 1-9, followed by 1-14 digits
+    const backendPattern = /^\+?[1-9]\d{1,14}$/;
     
-    // Extract digits only for length validation
-    const cleanPhone = phone.replace(/[^\d+]/g, '');
-    const digitsOnly = cleanPhone.replace(/^\+/, '');
-
-    // Check digit count
-    if (digitsOnly.length < 10 || digitsOnly.length > 11) {
-      return 'Phone number must be 10-11 digits';
-    }
-
-    // Check if all remaining characters are digits
-    if (!/^\d+$/.test(digitsOnly)) {
-      return 'Invalid phone number format';
+    if (!backendPattern.test(phone)) {
+      return 'Must be a valid phone number (e.g., +1234567890 or 1234567890)';
     }
 
     return null; // Valid

@@ -1,49 +1,25 @@
 import { Injectable } from '@angular/core';
-import { Observable, of } from 'rxjs';
-import { Message, SendMessageRequest } from '../models/message.model';
+import { Observable } from 'rxjs';
+import { Message, SendMessageRequest, ApiErrorResponse } from '../models/message.model';
+import { HttpClient, HttpParams } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root'
 })
 export class MessageService {
-  // Mock data for now - replace with actual API calls later
-  private mockMessages: Message[] = [
-    {
-      id: '1',
-      phoneNumber: '+1234567890',
-      messageBody: 'Hello! This is a test message.',
-      direction: 'outbound',
-      timestamp: new Date(Date.now() - 3600000),
-      status: 'delivered'
-    },
-    {
-      id: '2',
-      phoneNumber: '+1234567890',
-      messageBody: 'Thanks for the message!',
-      direction: 'inbound',
-      timestamp: new Date(Date.now() - 1800000)
-    }
-  ];
+  private apiUrl = 'http://localhost:3000';
 
-  constructor() {}
+  constructor(private http: HttpClient) {}
 
-  getMessages(): Observable<Message[]> {
-    // Mock API call - returns observable of messages
-    return of(this.mockMessages);
+  sendMessage(messageData: SendMessageRequest): Observable<Message> {
+    return this.http.post<Message>(`${this.apiUrl}/messages`, { message: messageData });
   }
 
-  sendMessage(request: SendMessageRequest): Observable<Message> {
-    // Mock sending message - replace with actual backend API call
-    const newMessage: Message = {
-      id: (this.mockMessages.length + 1).toString(),
-      phoneNumber: request.phoneNumber,
-      messageBody: request.messageBody,
-      direction: 'outbound',
-      timestamp: new Date(),
-      status: 'sent'
-    };
-    
-    this.mockMessages.push(newMessage);
-    return of(newMessage);
+  getMessages(sessionId?: string): Observable<Message[]> {
+    let params = new HttpParams();
+    if (sessionId) {
+      params = params.set('session_id', sessionId);
+    }
+    return this.http.get<Message[]>(`${this.apiUrl}/messages`, { params });
   }
 }
