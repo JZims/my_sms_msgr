@@ -1,1 +1,19 @@
-<app-chat></app-chat>
+<div class="app-container">
+  <!-- Authentication modal - shown when not authenticated -->
+  <app-login-modal 
+    *ngIf="!isAuthenticated"
+    (authenticated)="onAuthenticated()">
+  </app-login-modal>
+  
+  <!-- Main chat interface - shown when authenticated -->
+  <div *ngIf="isAuthenticated" class="authenticated-content">
+    <header class="app-header">
+      <h1>SMS Messenger</h1>
+      <div class="user-info">
+        <span>Welcome, {{ currentUser }}!</span>
+        <button class="logout-btn" (click)="logout()">Logout</button>
+      </div>
+    </header>
+    <app-chat></app-chat>
+  </div>
+</div>

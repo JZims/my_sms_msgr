@@ -1,0 +1,27 @@
+# Railway Deployment Configuration
+version: 1
+
+services:
+  backend:
+    source: ./my_sms_be
+    dockerfile: Dockerfile.railway
+    variables:
+      RAILS_ENV: production
+      RAILS_SERVE_STATIC_FILES: true
+      RAILS_LOG_TO_STDOUT: true
+    healthcheck:
+      path: /health
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  frontend:
+    source: ./my_sms_fe
+    dockerfile: Dockerfile.railway
+    variables:
+      NODE_ENV: production
+    healthcheck:
+      path: /
+      interval: 30s
+      timeout: 10s
+      retries: 3
