@@ -43,10 +43,12 @@
         <input 
           id="phone"
           type="text" 
-          [(ngModel)]="phoneNumber" 
+          [(ngModel)]="phoneNumber"
+          value="+18777804236" 
           (blur)="validatePhone()"
           placeholder="Phone number (e.g., +1234567890)"
           [class.error]="phoneError">
+          
         <div *ngIf="phoneError" class="error-text">{{ phoneError }}</div>
       </div>
       
