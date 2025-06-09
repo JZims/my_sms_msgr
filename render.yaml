@@ -1,0 +1,44 @@
+services:
+  # Rails Backend API
+  - type: web
+    name: my-sms-backend
+    env: ruby
+    buildCommand: bundle install && bundle exec rails assets:precompile
+    startCommand: bundle exec rails server -b 0.0.0.0 -p $PORT
+    envVars:
+      - key: RAILS_ENV
+        value: production
+      - key: RAILS_SERVE_STATIC_FILES
+        value: true
+      - key: RAILS_LOG_TO_STDOUT
+        value: true
+      - key: MONGODB_URI
+        fromDatabase:
+          name: my-sms-mongodb
+          property: connectionString
+      - key: TWILIO_ACCOUNT_SID
+        sync: false  # You'll set this manually in Render dashboard
+      - key: TWILIO_AUTH_TOKEN
+        sync: false  # You'll set this manually in Render dashboard
+      - key: TWILIO_PHONE_NUMBER
+        sync: false  # You'll set this manually in Render dashboard
+      - key: RAILS_MASTER_KEY
+        sync: false  # You'll set this manually in Render dashboard
+    rootDir: ./my_sms_be
+
+  # Angular Frontend
+  - type: web
+    name: my-sms-frontend
+    env: static
+    buildCommand: cd my_sms_fe && npm install --legacy-peer-deps && npm run build --prod
+    staticPublishPath: ./my_sms_fe/dist/my-sms-fe
+    envVars:
+      - key: NODE_ENV
+        value: production
+
+# MongoDB Database
+databases:
+  - name: my-sms-mongodb
+    databaseName: my_sms_prod
+    user: admin
+    region: oregon
