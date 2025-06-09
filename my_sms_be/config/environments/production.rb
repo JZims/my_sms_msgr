@@ -10,6 +10,10 @@ Rails.application.configure do
   # Disabled for Railway deployment to avoid MongoDB connection issues during startup
   config.eager_load = false
 
+  # In production, prefer environment variables over encrypted credentials
+  # This prevents deployment failures due to credential decryption issues
+  config.require_master_key = false
+
   # Full error reports are disabled.
   config.consider_all_requests_local = false
 

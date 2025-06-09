@@ -1,7 +1,7 @@
 Rails.application.routes.draw do
   # Health check endpoints
   get "up" => "rails/health#show", as: :rails_health_check
-  get "health" => proc { [200, {'Content-Type' => 'application/json'}, ['{"status":"ok"}']] }
+  get "health" => "health#show"
   
   # Authentication
   post '/login', to: 'auth#login'
