@@ -3,7 +3,6 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { MessageService } from '../services/message.service';
 import { ValidationService } from '../services/validation.service';
-import { Message, SendMessageRequest } from '../models/message.model';
 
 @Component({
   selector: 'app-chat',
@@ -13,14 +12,13 @@ import { Message, SendMessageRequest } from '../models/message.model';
   styleUrls: ['./chat.component.scss']
 })
 export class ChatComponent implements OnInit {
-  messages: Message[] = [];
-  newMessage: SendMessageRequest = {
-    phoneNumber: '',
-    messageBody: ''
-  };
+  messages: any[] = [];
+  phoneNumber: string = '';
+  messageBody: string = '';
+  sessionId: string = '';
   
-  // Validation properties
-  phoneNumberError: string = '';
+  // Validation error messages
+  phoneError: string = '';
   messageError: string = '';
   
   constructor(
@@ -29,15 +27,14 @@ export class ChatComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    this.sessionId = 'session_' + Date.now();
     this.loadMessages();
   }
 
   loadMessages(): void {
     this.messageService.getMessages().subscribe({
       next: (messages) => {
-        this.messages = messages.sort((a, b) => 
-          new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime()
-        );
+        this.messages = messages;
       },
       error: (error) => {
         console.error('Error loading messages:', error);
@@ -46,69 +43,52 @@ export class ChatComponent implements OnInit {
   }
 
   sendMessage(): void {
-    // Validate inputs before sending
-    if (!this.validatePhoneNumber() || !this.validateMessage()) {
-      return;
+    if (this.isFormValid()) {
+      const messageData = {
+        session_id: this.sessionId,
+        phone_number: this.phoneNumber,
+        message_body: this.messageBody
+      };
+
+      this.messageService.sendMessage(messageData).subscribe({
+        next: (response) => {
+          this.messages.push(response);
+          this.phoneNumber = '';
+          this.messageBody = '';
+          this.clearErrors();
+        },
+        error: (error) => {
+          console.error('Error sending message:', error);
+        }
+      });
     }
-
-    this.messageService.sendMessage(this.newMessage).subscribe({
-      next: (message) => {
-        this.messages.push(message);
-        this.newMessage = { phoneNumber: '', messageBody: '' };
-        this.clearValidationErrors();
-      },
-      error: (error) => {
-        console.error('Error sending message:', error);
-      }
-    });
   }
 
-  validatePhoneNumber(): boolean {
-    const error = this.validationService.validatePhoneNumber(this.newMessage.phoneNumber);
-    this.phoneNumberError = error || '';
-    return !error;
+  isFormValid(): boolean {
+    this.validatePhone();
+    this.validateMessage();
+    return !this.phoneError && !this.messageError;
   }
 
-  validateMessage(): boolean {
-    const error = this.validationService.validateMessage(this.newMessage.messageBody);
-    this.messageError = error || '';
-    return !error;
+  validatePhone(): void {
+    this.phoneError = this.validationService.validatePhoneNumber(this.phoneNumber) || '';
   }
 
-  clearValidationErrors(): void {
-    this.phoneNumberError = '';
+  validateMessage(): void {
+    this.messageError = this.validationService.validateMessage(this.messageBody, 250) || '';
+  }
+
+  clearErrors(): void {
+    this.phoneError = '';
     this.messageError = '';
   }
 
-  // Method to check if form is valid for button state
-  isFormValid(): boolean {
-    return this.newMessage.phoneNumber.trim() !== '' && 
-           this.newMessage.messageBody.trim() !== '' &&
-           this.phoneNumberError === '' &&
-           this.messageError === '';
+  getCharacterCount(): string {
+    const remaining = 250 - this.messageBody.length;
+    return `${this.messageBody.length}/250 characters`;
   }
 
-  // Method to get remaining character count
-  getRemainingChars(): number {
-    return 250 - this.newMessage.messageBody.length;
-  }
-
-  // Helper method to format phone number as user types
-  onPhoneNumberInput(event: any): void {
-    const formatted = this.validationService.formatPhoneNumber(event.target.value);
-    this.newMessage.phoneNumber = formatted;
-    this.validatePhoneNumber();
-  }
-
-  // Helper method to validate on message input
-  onMessageInput(): void {
-    this.validateMessage();
-  }
-
-  formatTime(timestamp: Date): string {
-    return new Date(timestamp).toLocaleTimeString('en-US', {
-      hour: '2-digit',
-      minute: '2-digit'
-    });
+  isCharacterLimitExceeded(): boolean {
+    return this.messageBody.length > 250;
   }
 }

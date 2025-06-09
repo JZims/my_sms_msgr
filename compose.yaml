@@ -16,28 +16,28 @@ services:
   backend:
     build: 
       context: ./my_sms_be
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.dev
     container_name: my_sms_be_dev
     restart: unless-stopped
     ports:
       - "3000:3000"
     environment:
-      - RAILS_ENV=production
+      - RAILS_ENV=development
       - MONGODB_URI=mongodb://admin:password123@mongodb:27017/my_sms_dev?authSource=admin
-      - SECRET_KEY_BASE=balthazaar2700
     depends_on:
       - mongodb
     volumes:
       - ./my_sms_be:/rails
       - /rails/tmp
       - /rails/log
+      - bundle_cache:/usr/local/bundle
     networks:
       - app-network
-    command: bin/rails server -b 0.0.0.0 -p 3000
+
   frontend:
     build:
       context: ./my_sms_fe
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.dev
     container_name: my_sms_fe_dev
     restart: unless-stopped
     ports:
@@ -49,10 +49,10 @@ services:
       - /app/node_modules
     networks:
       - app-network
-    command: ng serve --host 0.0.0.0 --port 4200
 
 volumes:
   mongodb_dev_data:
+  bundle_cache:
 
 networks:
   app-network:

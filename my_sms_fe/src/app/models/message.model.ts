@@ -1,13 +1,21 @@
 export interface Message {
-  id?: string;
-  phoneNumber: string; // Add Validation - 10 Digits
-  messageBody: string; // Add Validation - 250 Characters
+  _id?: string;
+  session_id: string;
+  phone_number: string;
+  message_body: string;
   direction: 'outbound' | 'inbound';
-  timestamp: Date;
-  status?: 'sent' | 'delivered' | 'failed';
+  status: 'sending' | 'sent' | 'delivered' | 'failed';
+  twilio_sid?: string;
+  created_at: string;
+  updated_at: string;
 }
 
 export interface SendMessageRequest {
-  phoneNumber: string;
-  messageBody: string;
+  session_id: string;
+  phone_number: string;
+  message_body: string;
+}
+
+export interface ApiErrorResponse {
+  errors: string[] | { [key: string]: string[] };
 }

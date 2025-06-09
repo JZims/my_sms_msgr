@@ -29,7 +29,7 @@ RSpec.describe "Messages API", type: :request do
             status: 201,
             body: {
               sid: "SM123456789",
-              status: "queued",
+              status: "sent",
               to: "+1234567890",
               from: "+1234567890",
               body: "Hello from Twilio test!"
@@ -82,7 +82,7 @@ RSpec.describe "Messages API", type: :request do
         expect(message.twilio_sid).to be_nil
         
         response_body = JSON.parse(response.body)
-        expect(response_body["errors"]).to include("SMS failed:")
+        expect(response_body["errors"].first).to include("SMS failed to send")
       end
     end
 
@@ -93,7 +93,8 @@ RSpec.describe "Messages API", type: :request do
       post "/messages", params: invalid_params
       
       expect(response).to have_http_status(:unprocessable_entity)
-      expect(JSON.parse(response.body)["errors"]).to include("Session can't be blank")
+      response_body = JSON.parse(response.body)
+      expect(response_body["errors"]["session_id"]).to include("can't be blank")
     end
   end
 
