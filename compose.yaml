@@ -24,7 +24,7 @@ services:
     environment:
       - RAILS_ENV=production
       - MONGODB_URI=mongodb://admin:password123@mongodb:27017/my_sms_dev?authSource=admin
-      - SECRET_KEY_BASE=your_secret_key_here
+      - SECRET_KEY_BASE=balthazaar2700
     depends_on:
       - mongodb
     volumes:
