@@ -81,10 +81,8 @@ class MessagesController < ApplicationController
         client = Twilio::REST::Client.new(TwilioConfig.account_sid, TwilioConfig.auth_token)
 
         begin
-            # Set up status callback URL for webhook updates
-            status_callback_url = "#{request.base_url}/webhooks/twilio/status"
-            
-            twilio_message = client.messages.create(
+            # Prepare message parameters
+            message_params = {
                 from: TwilioConfig.phone_number,
                 to: message.phone_number,
                 body: message.message_body

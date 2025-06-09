@@ -7,8 +7,7 @@ Rails.application.configure do
   config.enable_reloading = false
 
   # Eager load code on boot for better performance and memory savings (ignored by Rake tasks).
-  # Disabled for Railway deployment to avoid MongoDB connection issues during startup
-  config.eager_load = false
+  config.eager_load = true
 
   # In production, prefer environment variables over encrypted credentials
   # This prevents deployment failures due to credential decryption issues
@@ -26,8 +25,8 @@ Rails.application.configure do
   # Assume all access to the app is happening through a SSL-terminating reverse proxy.
   config.assume_ssl = true
 
-  # Railway handles SSL termination, so don't force SSL at the app level
-  config.force_ssl = false
+  # Force SSL for secure connections
+  config.force_ssl = true
 
   # Skip http-to-https redirect for the default health check endpoint.
   # config.ssl_options = { redirect: { exclude: ->(request) { request.path == "/up" } } }
@@ -56,11 +55,11 @@ Rails.application.configure do
   config.i18n.fallbacks = true
 
   # Enable DNS rebinding protection and other `Host` header attacks.
+  # Add your production domains here
   config.hosts = [
-    "sms-backend-production-b58e.up.railway.app", # Railway public domain
-    "sms-backend.railway.internal",                # Railway private domain
-    /.*\.railway\.app/,                           # Any Railway subdomain
-    /.*\.railway\.internal/                       # Any Railway internal domain
+    # Add your production domains here, e.g.:
+    # "yourdomain.com",
+    # "www.yourdomain.com"
   ]
   
   # Skip DNS rebinding protection for health check endpoint.

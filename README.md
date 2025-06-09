@@ -11,7 +11,6 @@ A modern, real-time SMS messaging application built with Rails API backend and A
 - **User authentication** with JWT tokens
 - **MongoDB database** for scalable message storage
 - **Docker containerization** for consistent deployment
-- **Railway deployment ready** with production Dockerfiles
 
 ## 📱 Message Status Flow
 
@@ -60,9 +59,6 @@ Status updates happen automatically via:
    - Frontend: http://localhost:4200
    - Backend API: http://localhost:3000
 
-
- **Manual deployment**: See [Railway Deployment Guide](docs/railway-deployment.md)
-
 ## 📁 Project Structure
 
 ```
@@ -73,19 +69,16 @@ my_sms_msgr/
 │   │   ├── models/           # Data models
 │   │   └── jobs/             # Background jobs
 │   ├── config/               # Rails configuration
-│   ├── Dockerfile.railway    # Production Dockerfile
-│   └── Dockerfile.dev        # Development Dockerfile
+│   └── Dockerfile           # Production Dockerfile
 ├── my_sms_fe/                # Angular frontend
 │   ├── src/
 │   │   ├── app/              # Angular components
 │   │   └── environments/     # Environment configs
-│   ├── Dockerfile.railway    # Production Dockerfile
+│   ├── Dockerfile           # Production Dockerfile
 │   └── nginx.conf           # Production nginx config
 ├── docs/                     # Documentation
 ├── compose.yaml             # Development Docker Compose
-├── compose.prod.yaml        # Production Docker Compose
-├── railway.yml              # Railway configuration
-└── deploy.sh               # Automated deployment script
+└── compose.prod.yaml        # Production Docker Compose
 ```
 
 ## 🔧 Configuration
@@ -106,7 +99,7 @@ my_sms_msgr/
 
 Configure your Twilio phone number webhook URL to:
 ```
-https://your-backend.railway.app/webhooks/twilio/status
+https://your-production-backend-url.com/webhooks/twilio/status
 ```
 
 ## 🧪 API Endpoints
@@ -150,9 +143,9 @@ docker-compose -f compose.prod.yaml up
 
 ## 🚢 Deployment Options
 
-1. **Railway** (Recommended) - Use `./deploy.sh` for automated deployment
-2. **Docker** - Use production Dockerfiles with any container platform
-3. **Traditional** - Deploy Rails and Angular separately to VPS/cloud
+1. **Docker** - Use production Dockerfiles with any container platform
+2. **Traditional** - Deploy Rails and Angular separately to VPS/cloud
+3. **Cloud Services** - Deploy to AWS, GCP, Azure, or other cloud providers
 
 ## 📝 License
 

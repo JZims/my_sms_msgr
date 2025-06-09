@@ -1,4 +1,4 @@
-# Simple Dockerfile for Railway deployment
+# Production Dockerfile
 FROM ruby:3.4-alpine
 
 # Install system dependencies
