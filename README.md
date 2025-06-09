@@ -2,6 +2,11 @@
 
 A modern, real-time SMS messaging application built with Rails API backend and Angular frontend, featuring dynamic read receipts and clean, minimalist design.
 
+## 📺 Demo
+
+![SMS Messenger Demo](demo.gif)
+*Add your demo GIF here*
+
 ## 🚀 Features
 
 - **Real-time SMS messaging** via Twilio integration
@@ -40,117 +45,98 @@ Status updates happen automatically via:
 
 ## 🚀 Quick Start
 
-### Development Setup
+### Local Development
 
-1. **Clone and setup**:
+1. **Clone & setup**:
    ```bash
-   git clone <repository-url>
+   git clone https://github.com/JZims/my_sms_msgr.git
    cd my_sms_msgr
    cp .env.example .env
-   # Edit .env with your Twilio credentials
    ```
 
-2. **Start with Docker**:
+2. **Add your Twilio credentials to `.env`**:
+   ```bash
+   TWILIO_ACCOUNT_SID=your_account_sid
+   TWILIO_AUTH_TOKEN=your_auth_token  
+   TWILIO_PHONE_NUMBER=your_twilio_number
+   ```
+
+3. **Start everything with Docker**:
    ```bash
    docker compose up
    ```
 
-3. **Access the application**:
+4. **Access the app**:
    - Frontend: http://localhost:4200
    - Backend API: http://localhost:3000
+   - MongoDB: localhost:27017
+
+**That's it!** The app will auto-create the database and you can start sending SMS messages.
 
 ## 📁 Project Structure
 
 ```
 my_sms_msgr/
 ├── my_sms_be/                 # Rails API backend
-│   ├── app/
-│   │   ├── controllers/       # API controllers
-│   │   ├── models/           # Data models
-│   │   └── jobs/             # Background jobs
-│   ├── config/               # Rails configuration
-│   └── Dockerfile           # Production Dockerfile
-├── my_sms_fe/                # Angular frontend
-│   ├── src/
-│   │   ├── app/              # Angular components
-│   │   └── environments/     # Environment configs
-│   ├── Dockerfile           # Production Dockerfile
-│   └── nginx.conf           # Production nginx config
-├── docs/                     # Documentation
-├── compose.yaml             # Development Docker Compose
-└── compose.prod.yaml        # Production Docker Compose
+│   ├── app/                   # Application code
+│   ├── config/                # Rails configuration
+│   └── Dockerfile            # Production container
+├── my_sms_fe/                # Angular frontend  
+│   ├── src/app/              # Angular components
+│   ├── Dockerfile            # Production container
+│   └── nginx.conf            # Production web server
+├── compose.yaml              # Development environment
+├── compose.prod.yaml         # Production environment
+└── README.md                 # This file
 ```
 
 ## 🔧 Configuration
 
-### Environment Variables
-
-**Required for deployment**:
-- `MONGODB_URI` - MongoDB connection string
-- `TWILIO_ACCOUNT_SID` - Twilio Account SID
-- `TWILIO_AUTH_TOKEN` - Twilio Auth Token
+**Required environment variables:**
+- `TWILIO_ACCOUNT_SID` - Your Twilio Account SID
+- `TWILIO_AUTH_TOKEN` - Your Twilio Auth Token  
 - `TWILIO_PHONE_NUMBER` - Your Twilio phone number
-- `RAILS_MASTER_KEY` - Rails secret key (auto-generated)
+- `MONGODB_URI` - MongoDB connection string (auto-configured in Docker)
 
-**Optional**:
-- `APP_HOST` - Backend domain for webhook callbacks
+**For production deployment, also configure:**
+- `RAILS_MASTER_KEY` - Rails secret key  
+- `APP_HOST` - Your backend domain for webhook callbacks
 
-### Twilio Webhook Setup
-
-Configure your Twilio phone number webhook URL to:
+**Twilio webhook URL (for production):**
 ```
-https://your-production-backend-url.com/webhooks/twilio/status
+https://your-backend-domain.com/webhooks/twilio/status
 ```
 
 ## 🧪 API Endpoints
 
-### Authentication
-- `POST /login` - User login
-- `POST /register` - User registration
-
-### Messages
+- `POST /login` - User authentication
+- `POST /register` - User registration  
 - `GET /messages` - Get message history
-- `POST /messages` - Send new message
-- `GET /messages/check_status_updates` - Manual status check
-
-### Webhooks
-- `POST /webhooks/twilio/status` - Twilio status webhook
-
-### Health
-- `GET /health` - Health check endpoint
-- `GET /up` - Rails health check
-
+- `POST /messages` - Send new SMS message
+- `POST /webhooks/twilio/status` - Twilio status updates
+- `GET /health` - Health check
 
 ## 🛠️ Development
 
-### Local Development
+**Backend only:**
 ```bash
-# Start development environment
-docker-compose up
-
-# Backend only
 cd my_sms_be && rails server
+```
 
-# Frontend only
+**Frontend only:**
+```bash  
 cd my_sms_fe && ng serve
 ```
 
-### Testing Production Build
+**Production build test:**
 ```bash
-# Test production containers locally
-docker-compose -f compose.prod.yaml up
+docker compose -f compose.prod.yaml up
 ```
-
-## 🚢 Deployment Options
-
-1. **Docker** - Use production Dockerfiles with any container platform
-2. **Traditional** - Deploy Rails and Angular separately to VPS/cloud
-3. **Cloud Services** - Deploy to AWS, GCP, Azure, or other cloud providers
 
 ## 📝 License
 
 This project is open source and available under the [MIT License](LICENSE).
 
-
+---
 
 Built with ❤️ using Rails, Angular, and Twilio
