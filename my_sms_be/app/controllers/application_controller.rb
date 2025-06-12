@@ -1,5 +1,5 @@
 class ApplicationController < ActionController::API
-  before_action :authenticate_user!, except: [:login, :register, :health, :show]
+  before_action :authenticate_user!
   
   rescue_from StandardError, with: :handle_internal_error
 

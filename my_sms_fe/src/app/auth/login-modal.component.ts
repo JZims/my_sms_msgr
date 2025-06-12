@@ -201,8 +201,8 @@ export class LoginModalComponent {
       this.errorMessage = '';
 
       const authObservable = this.isRegisterMode 
-        ? this.authService.register(this.username.trim(), this.password)
-        : this.authService.login(this.username.trim(), this.password);
+        ? this.authService.register(this.username.trim(), this.password.trim())
+        : this.authService.login(this.username.trim(), this.password.trim());
 
       authObservable.subscribe({
         next: (response) => {
