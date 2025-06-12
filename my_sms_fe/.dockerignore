@@ -11,3 +11,4 @@ coverage/
 .nyc_output/
 e2e/
 src/**/*.spec.ts
+dist/

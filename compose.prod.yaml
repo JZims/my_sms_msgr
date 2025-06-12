@@ -25,6 +25,7 @@ services:
     ports:
       - "3000:3000"
     environment:
+      - NGROK_TUNNEL_URL=$(NGROK_TUNNEL_URL)
       - RAILS_ENV=production
       - RAILS_SERVE_STATIC_FILES=true
       - RAILS_LOG_TO_STDOUT=true
@@ -33,6 +34,7 @@ services:
       - TWILIO_AUTH_TOKEN=${TWILIO_AUTH_TOKEN}
       - TWILIO_PHONE_NUMBER=${TWILIO_PHONE_NUMBER}
       - RAILS_MASTER_KEY=${RAILS_MASTER_KEY}
+      - SECRET_KEY_BASE=cfcbd40b1331112d62fb786bb178e9da176c318dcc9647b9b24456fae8460624640ec6538c753963ed46720269fa021384db236798818302641c1f4479220f09
     depends_on:
       - mongodb
     networks:
@@ -45,7 +47,7 @@ services:
     container_name: my_sms_fe_prod
     restart: unless-stopped
     ports:
-      - "80:80"
+      - "4200:80"
     depends_on:
       - backend
     networks:

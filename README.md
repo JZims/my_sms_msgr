@@ -131,6 +131,52 @@ cd my_sms_fe && ng serve
 docker compose -f compose.prod.yaml up
 ```
 
+## 🚀 Production Deployment
+
+### Prerequisites
+- Docker & Docker Compose installed
+- Twilio account with SMS capabilities
+- Public domain/server for webhooks
+
+### Deploy Steps
+
+1. **Configure environment:**
+   ```bash
+   # Add production values to compose.prod.yaml
+   TWILIO_ACCOUNT_SID=your_account_sid
+   TWILIO_AUTH_TOKEN=your_auth_token  
+   TWILIO_PHONE_NUMBER=your_twilio_number
+   SECRET_KEY_BASE=your_rails_secret_key
+   ```
+
+2. **Build and start production containers:**
+   ```bash
+   docker compose -f compose.prod.yaml up --build -d
+   ```
+
+3. **Setup ngrok for webhooks (development/testing):**
+   ```bash
+   ngrok http 3000
+   # Copy the https URL for Twilio webhook configuration
+   ```
+
+4. **Configure Twilio webhook:**
+   - Go to Twilio Console > Phone Numbers > Manage > Active Numbers
+   - Click on your Twilio phone number
+   - Set webhook URL: `https://your-ngrok-url.ngrok.app/webhooks/twilio/status`
+   - Set HTTP method: `POST`
+   - **⚠️ IMPORTANT:** Never use `localhost` URLs - Twilio can't reach them!
+
+5. **Verify deployment:**
+   - Frontend: `http://localhost:4200`
+   - Backend: `http://localhost:3000`
+   - Webhook: `https://your-ngrok-url.ngrok.app/webhooks/twilio/status`
+
+**Production URLs:**
+- Replace ngrok with your actual domain for production
+- Ensure SSL/HTTPS for webhook endpoints
+- Configure firewall rules for ports 3000, 4200, 27017
+
 ## 📝 License
 
 This project is open source and available under the [MIT License](LICENSE).

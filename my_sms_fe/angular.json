@@ -69,6 +69,7 @@
                   "maximumError": "8kB"
                 }
               ],
+              "outputPath": "dist/my_sms_fe",
               "outputHashing": "all",
               "fileReplacements": [
                 {
@@ -122,5 +123,8 @@
         }
       }
     }
+  },
+  "cli": {
+    "analytics": false
   }
 }
