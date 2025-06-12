@@ -7,17 +7,11 @@
 
 Rails.application.config.middleware.insert_before 0, Rack::Cors do
   allow do
-    if Rails.env.test?
-      origins "*"
-    elsif Rails.env.production?
-      # Allow your Render frontend domain - update after deployment
-      origins /https:\/\/.*\.onrender\.com$/
-    else
-      origins "http://localhost:4200", "http://127.0.0.1:4200"
-    end
+    origins "http://localhost:4200", "http://127.0.0.1:4200"
 
     resource "*",
       headers: :any,
-      methods: [:get, :post, :put, :patch, :delete, :options, :head]
+      methods: [:get, :post, :put, :patch, :delete, :options, :head],
+      credentials: true
   end
 end
